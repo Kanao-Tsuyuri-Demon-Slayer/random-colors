@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Color Generator</title>
+    <!-- Include Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+
+    <div class="max-w-md w-full p-8 bg-white rounded-md shadow-md">
+        <h1 class="text-2xl font-semibold mb-4">Gradient Color Generator</h1>
+        
+        <div class="mb-4">
+            <label for="startColor" class="text-gray-700 block">Start Color:</label>
+            <input type="color" id="startColor" class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300">
+            <div id="startColorBox" class="w-8 h-8 mt-2 rounded-md"></div>
+            <span id="startColorLabel" class="text-sm text-gray-500"></span>
+        </div>
+        
+        <div class="mb-4">
+            <label for="endColor" class="text-gray-700 block">End Color:</label>
+            <input type="color" id="endColor" class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300">
+            <div id="endColorBox" class="w-8 h-8 mt-2 rounded-md"></div>
+            <span id="endColorLabel" class="text-sm text-gray-500"></span>
+        </div>
+
+        <div class="mb-4">
+            <label for="gradientDirection" class="text-gray-700 block">Gradient Direction:</label>
+            <select id="gradientDirection" class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300">
+                <option value="to right">To Right</option>
+                <option value="to left">To Left</option>
+                <option value="to bottom">To Bottom</option>
+                <option value="to top">To Top</option>
+                <option value="to bottom left">To Bottom Left</option>
+                <option value="to bottom right">To Bottom Right</option>
+                <option value="to top left">To Top Left</option>
+                <option value="to top right">To Top Right</option>
+                <option value="to bottom top">To Bottom Top</option>
+                <option value="to center top">To Center Top</option>
+            </select>
+        </div>
+
+        <div id="gradientBox" class="w-full h-32 mb-6 rounded-md"></div>
+
+        <div class="flex space-x-2">
+            <button id="copyGradientBtn" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:border-green-300">Copy Gradient Code</button>
+            <button id="refreshColorsBtn" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">Refresh Colors</button>
+        </div>
+    </div>
+
+    <!-- Include JavaScript -->
+    <script>
+        // Function to update the gradient box with a new gradient
+        function updateGradientBox(startColor, endColor, gradientDirection) {
+            const gradientBox = document.getElementById('gradientBox');
+            gradientBox.style.background = `linear-gradient(${gradientDirection}, ${startColor}, ${endColor})`;
+        }
+
+        // Function to update color labels and boxes
+        function updateColorVisuals(colorInputId, colorBoxId, colorLabelId) {
+            const color = document.getElementById(colorInputId).value;
+
+            document.getElementById(colorBoxId).style.background = color;
+            document.getElementById(colorLabelId).textContent = `Selected Color: ${color}`;
+        }
+
+        // Function to handle the generation of the gradient
+        function generateGradient() {
+            const startColor = document.getElementById('startColor').value;
+            const endColor = document.getElementById('endColor').value;
+            const gradientDirection = document.getElementById('gradientDirection').value;
+
+            updateGradientBox(startColor, endColor, gradientDirection);
+        }
+
+        // Attach change events to color inputs and gradient direction
+        document.getElementById('startColor').addEventListener('input', function () {
+            updateColorVisuals('startColor', 'startColorBox', 'startColorLabel');
+            generateGradient();
+        });
+
+        document.getElementById('endColor').addEventListener('input', function () {
+            updateColorVisuals('endColor', 'endColorBox', 'endColorLabel');
+            generateGradient();
+        });
+
+        document.getElementById('gradientDirection').addEventListener('change', generateGradient);
+
+        // Attach click event to the "Copy Gradient Code" button
+        document.getElementById('copyGradientBtn').addEventListener('click', function () {
+            const gradientCode = `linear-gradient(${document.getElementById('gradientDirection').value}, ${document.getElementById('startColor').value}, ${document.getElementById('endColor').value})`;
+
+            navigator.clipboard.writeText(gradientCode).then(function() {
+                alert('Gradient Code Copied!');
+            }).catch(function(err) {
+                console.error('Unable to copy text', err);
+            });
+        });
+
+        // Attach click event to the "Refresh Colors" button
+        document.getElementById('refreshColorsBtn').addEventListener('click', function () {
+            document.getElementById('startColor').value = generateRandomColor();
+            document.getElementById('endColor').value = generateRandomColor();
+            updateColorVisuals('startColor', 'startColorBox', 'startColorLabel');
+            updateColorVisuals('endColor', 'endColorBox', 'endColorLabel');
+            generateGradient();
+        });
+
+        // Function to generate a random hex color
+        function generateRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Initial gradient generation and color visual update on page load
+        generateGradient();
+        updateColorVisuals('startColor', 'startColorBox', 'startColorLabel');
+        updateColorVisuals('endColor', 'endColorBox', 'endColorLabel');
+    </script>
+</body>
+</html>

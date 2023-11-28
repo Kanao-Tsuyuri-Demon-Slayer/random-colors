@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Generator</title>
+    <!-- Include Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+
+    <div class="max-w-md w-full p-8 bg-white rounded-md shadow-md">
+        <h1 class="text-2xl font-semibold mb-4">Color Generator</h1>
+        <div id="colorBox" class="w-full h-32 mb-6 rounded-md"></div>
+        <p id="colorCode" class="text-gray-700 font-mono text-lg mb-4"></p>
+        <button id="generateBtn" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">Generate Color</button>
+        <button id="copyBtn" class="bg-green-500 text-white py-2 px-4 rounded-md ml-2 hover:bg-green-600 focus:outline-none focus:ring focus:border-green-300">Copy Color Code</button>
+    </div>
+
+    <!-- Include JavaScript -->
+    <script>
+        // Function to generate a random hex color
+        function generateRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Function to update the color box with a new random color
+        function updateColorBox() {
+            const colorBox = document.getElementById('colorBox');
+            const colorCode = document.getElementById('colorCode');
+
+            const generatedColor = generateRandomColor();
+            
+            colorBox.style.backgroundColor = generatedColor;
+            colorCode.textContent = generatedColor;
+        }
+
+        // Function to copy the color code to the clipboard
+        function copyColorCode() {
+            const colorCode = document.getElementById('colorCode').textContent;
+            
+            const tempInput = document.createElement('input');
+            tempInput.value = colorCode;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            alert('Color Code Copied!');
+        }
+
+        // Attach click events to the buttons
+        document.getElementById('generateBtn').addEventListener('click', updateColorBox);
+        document.getElementById('copyBtn').addEventListener('click', copyColorCode);
+
+        // Initial color generation on page load
+        updateColorBox();
+    </script>
+</body>
+</html>
